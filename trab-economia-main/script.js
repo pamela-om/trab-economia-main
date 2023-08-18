@@ -135,6 +135,10 @@ options.forEach(option => {
   option.addEventListener('mouseout', removeBlobAnimation);
 }); 
 
+function redirectToHome() {
+  window.location.href = "index.html"; // Substitua pela URL da sua página inicial
+}
+
 
 
 // Dados do Quiz
@@ -182,6 +186,66 @@ const quizData = [
     explanation: ' Um medicamento patenteado é um exemplo clássico de monopólio, onde uma única empresa possui o controle exclusivo sobre a produção e venda desse produto.'
   },
 ];
+
+
+const btnInicio = document.querySelector('.btn-inicio');
+
+btnInicio.addEventListener('click', redirectToHome);
+
+
+function showFinalMessage() {
+  const container = document.querySelector('.container');
+  
+  const finalMessage = document.createElement('div');
+  finalMessage.classList.add('final-message');
+
+  const scoreMessage = document.createElement('p');
+  scoreMessage.textContent = `Você acertou ${score} de ${quizData.length} perguntas.`;
+
+  const message = document.createElement('p');
+  if (score === quizData.length) {
+    message.textContent = "Parabéns! Você acertou todas as perguntas!";
+  } else {
+    message.textContent = "Quiz finalizado. Obrigado por participar!";
+  }
+
+  const btnInicio = document.createElement('button');
+  btnInicio.textContent = 'Voltar à Página Inicial';
+  btnInicio.classList.add('btn-inicio');
+  btnInicio.addEventListener('click', redirectToHome);
+
+  finalMessage.appendChild(scoreMessage);
+  finalMessage.appendChild(message);
+  finalMessage.appendChild(btnInicio);
+
+  container.innerHTML = ''; // Limpa o conteúdo atual
+  container.appendChild(finalMessage);
+}
+
+quizForm.addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  const selectedOption = document.querySelector(
+    `input[name="answer"]:checked`
+  );
+
+  if (selectedOption) {
+    quizData[currentQuestion].selectedAnswer = parseInt(
+      selectedOption.value
+    );
+
+    options.forEach(option => {
+      option.classList.remove('selected');
+    });
+
+    selectedOption.parentElement.classList.add('selected');
+    showFeedback();
+
+    if (currentQuestion === quizData.length - 1) {
+      showFinalMessage();
+    }
+  }
+});
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
